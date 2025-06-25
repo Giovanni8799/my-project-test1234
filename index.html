@@ -1,0 +1,881 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SocialConnect - Din sociala plattform</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f0f2f5;
+            color: #1c1e21;
+        }
+
+        /* Header */
+        .header {
+            background: #fff;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            padding: 8px 16px;
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .logo {
+            font-size: 28px;
+            font-weight: bold;
+            color: #1877f2;
+            text-decoration: none;
+        }
+
+        .search-bar {
+            flex: 1;
+            max-width: 320px;
+            margin: 0 20px;
+            position: relative;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 10px 16px;
+            border: none;
+            background: #f0f2f5;
+            border-radius: 50px;
+            font-size: 15px;
+            outline: none;
+        }
+
+        .search-input:focus {
+            background: #fff;
+            box-shadow: 0 0 0 2px #1877f2;
+        }
+
+        .nav-icons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .nav-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #f0f2f5;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: background 0.2s;
+            font-size: 18px;
+        }
+
+        .nav-icon:hover {
+            background: #e4e6ea;
+        }
+
+        .nav-icon.active {
+            background: #1877f2;
+            color: white;
+        }
+
+        /* Main Layout */
+        .main-container {
+            max-width: 1200px;
+            margin: 80px auto 0;
+            display: grid;
+            grid-template-columns: 280px 1fr 320px;
+            gap: 20px;
+            padding: 20px;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            background: #fff;
+            border-radius: 8px;
+            padding: 20px;
+            height: fit-content;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .sidebar-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.2s;
+            margin-bottom: 4px;
+        }
+
+        .sidebar-item:hover {
+            background: #f0f2f5;
+        }
+
+        .sidebar-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: #1877f2;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 16px;
+        }
+
+        /* Feed */
+        .feed {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .create-post {
+            background: #fff;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .create-post-header {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, #1877f2, #42a5f5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+
+        .post-input {
+            flex: 1;
+            padding: 12px 16px;
+            border: 1px solid #e4e6ea;
+            border-radius: 24px;
+            font-size: 16px;
+            outline: none;
+            resize: none;
+            min-height: 40px;
+        }
+
+        .post-input:focus {
+            border-color: #1877f2;
+        }
+
+        .post-actions {
+            display: flex;
+            gap: 12px;
+            margin-top: 12px;
+        }
+
+        .post-btn {
+            flex: 1;
+            padding: 10px;
+            border: none;
+            background: #f0f2f5;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .post-btn:hover {
+            background: #e4e6ea;
+        }
+
+        .post-btn.primary {
+            background: #1877f2;
+            color: white;
+        }
+
+        .post-btn.primary:hover {
+            background: #166fe5;
+        }
+
+        /* Posts */
+        .post {
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .post-header {
+            padding: 16px 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .post-user-info h3 {
+            font-size: 15px;
+            font-weight: 600;
+            margin-bottom: 2px;
+        }
+
+        .post-time {
+            font-size: 13px;
+            color: #65676b;
+        }
+
+        .post-content {
+            padding: 0 20px 16px;
+            font-size: 15px;
+            line-height: 1.4;
+        }
+
+        .post-image {
+            width: 100%;
+            height: 300px;
+            object-fit: cover;
+            margin-bottom: 12px;
+        }
+
+        .post-stats {
+            padding: 12px 20px;
+            border-top: 1px solid #e4e6ea;
+            display: flex;
+            justify-content: space-between;
+            font-size: 13px;
+            color: #65676b;
+        }
+
+        .post-interactions {
+            padding: 8px 20px;
+            border-top: 1px solid #e4e6ea;
+            display: flex;
+            gap: 4px;
+        }
+
+        .interaction-btn {
+            flex: 1;
+            padding: 8px;
+            border: none;
+            background: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            font-size: 14px;
+            font-weight: 500;
+            color: #65676b;
+        }
+
+        .interaction-btn:hover {
+            background: #f0f2f5;
+        }
+
+        .interaction-btn.liked {
+            color: #1877f2;
+        }
+
+        /* Right Sidebar */
+        .right-sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .widget {
+            background: #fff;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .widget h3 {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 16px;
+            color: #65676b;
+        }
+
+        .friend-request, .online-friend {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 8px 0;
+        }
+
+        .friend-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, #ff6b6b, #feca57);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        .friend-info {
+            flex: 1;
+        }
+
+        .friend-name {
+            font-size: 14px;
+            font-weight: 500;
+            margin-bottom: 2px;
+        }
+
+        .friend-status {
+            font-size: 12px;
+            color: #65676b;
+        }
+
+        .friend-actions {
+            display: flex;
+            gap: 8px;
+            margin-top: 8px;
+        }
+
+        .friend-btn {
+            padding: 6px 12px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .friend-btn.accept {
+            background: #1877f2;
+            color: white;
+        }
+
+        .friend-btn.decline {
+            background: #e4e6ea;
+            color: #1c1e21;
+        }
+
+        .online-indicator {
+            width: 8px;
+            height: 8px;
+            background: #42b883;
+            border-radius: 50%;
+            margin-left: auto;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .main-container {
+                grid-template-columns: 1fr;
+                padding: 10px;
+                margin-top: 70px;
+            }
+
+            .sidebar, .right-sidebar {
+                display: none;
+            }
+
+            .header-content {
+                padding: 0 10px;
+            }
+
+            .search-bar {
+                margin: 0 10px;
+            }
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 2000;
+        }
+
+        .modal-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: #fff;
+            border-radius: 8px;
+            padding: 24px;
+            width: 90%;
+            max-width: 500px;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .modal-title {
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: #65676b;
+        }
+
+        .modal-textarea {
+            width: 100%;
+            min-height: 120px;
+            padding: 12px;
+            border: 1px solid #e4e6ea;
+            border-radius: 8px;
+            font-size: 16px;
+            font-family: inherit;
+            resize: vertical;
+            outline: none;
+        }
+
+        .modal-textarea:focus {
+            border-color: #1877f2;
+        }
+
+        .modal-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 12px;
+            margin-top: 16px;
+        }
+
+        .modal-btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .modal-btn.cancel {
+            background: #e4e6ea;
+            color: #1c1e21;
+        }
+
+        .modal-btn.publish {
+            background: #1877f2;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <a href="#" class="logo">SocialConnect</a>
+            
+            <div class="search-bar">
+                <input type="text" class="search-input" placeholder="Sök på SocialConnect">
+            </div>
+            
+            <div class="nav-icons">
+                <div class="nav-icon active" title="Hem">🏠</div>
+                <div class="nav-icon" title="Vänner">👥</div>
+                <div class="nav-icon" title="Meddelanden">💬</div>
+                <div class="nav-icon" title="Notiser">🔔</div>
+                <div class="nav-icon" title="Profil">👤</div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <div class="main-container">
+        <!-- Left Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-item">
+                <div class="sidebar-icon">👤</div>
+                <span>Min Profil</span>
+            </div>
+            <div class="sidebar-item">
+                <div class="sidebar-icon">👥</div>
+                <span>Vänner</span>
+            </div>
+            <div class="sidebar-item">
+                <div class="sidebar-icon">📸</div>
+                <span>Foton</span>
+            </div>
+            <div class="sidebar-item">
+                <div class="sidebar-icon">📹</div>
+                <span>Videor</span>
+            </div>
+            <div class="sidebar-item">
+                <div class="sidebar-icon">👥</div>
+                <span>Grupper</span>
+            </div>
+            <div class="sidebar-item">
+                <div class="sidebar-icon">📅</div>
+                <span>Evenemang</span>
+            </div>
+            <div class="sidebar-item">
+                <div class="sidebar-icon">⚙️</div>
+                <span>Inställningar</span>
+            </div>
+        </aside>
+
+        <!-- Main Feed -->
+        <main class="feed">
+            <!-- Create Post -->
+            <div class="create-post">
+                <div class="create-post-header">
+                    <div class="user-avatar">DU</div>
+                    <textarea class="post-input" placeholder="Vad tänker du på, Du?" onclick="openPostModal()"></textarea>
+                </div>
+                <div class="post-actions">
+                    <button class="post-btn" onclick="openPostModal()">
+                        📹 Live-video
+                    </button>
+                    <button class="post-btn" onclick="openPostModal()">
+                        📸 Foto/Video
+                    </button>
+                    <button class="post-btn" onclick="openPostModal()">
+                        😊 Känsla/aktivitet
+                    </button>
+                </div>
+            </div>
+
+            <!-- Posts -->
+            <article class="post">
+                <div class="post-header">
+                    <div class="user-avatar">AH</div>
+                    <div class="post-user-info">
+                        <h3>Anna Hedberg</h3>
+                        <div class="post-time">2 timmar sedan</div>
+                    </div>
+                </div>
+                <div class="post-content">
+                    Vilken fantastisk dag! Precis kommit hem från en härlig promenad i skogen. Naturen är verkligen det bästa medicinen för själen. 🌲✨
+                </div>
+                <img src="https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=600&h=400&fit=crop" alt="Skog" class="post-image">
+                <div class="post-stats">
+                    <span>15 gilla-markeringar</span>
+                    <span>3 kommentarer</span>
+                </div>
+                <div class="post-interactions">
+                    <button class="interaction-btn" onclick="toggleLike(this)">
+                        👍 Gilla
+                    </button>
+                    <button class="interaction-btn">
+                        💬 Kommentera
+                    </button>
+                    <button class="interaction-btn">
+                        📤 Dela
+                    </button>
+                </div>
+            </article>
+
+            <article class="post">
+                <div class="post-header">
+                    <div class="user-avatar" style="background: linear-gradient(45deg, #ff6b6b, #feca57);">MJ</div>
+                    <div class="post-user-info">
+                        <h3>Marcus Johansson</h3>
+                        <div class="post-time">4 timmar sedan</div>
+                    </div>
+                </div>
+                <div class="post-content">
+                    Äntligen fredag! Vem är redo för helg? 🎉 Planerar att grilla med familjen imorgon. Vad har ni för planer?
+                </div>
+                <div class="post-stats">
+                    <span>8 gilla-markeringar</span>
+                    <span>12 kommentarer</span>
+                </div>
+                <div class="post-interactions">
+                    <button class="interaction-btn" onclick="toggleLike(this)">
+                        👍 Gilla
+                    </button>
+                    <button class="interaction-btn">
+                        💬 Kommentera
+                    </button>
+                    <button class="interaction-btn">
+                        📤 Dela
+                    </button>
+                </div>
+            </article>
+
+            <article class="post">
+                <div class="post-header">
+                    <div class="user-avatar" style="background: linear-gradient(45deg, #a8e6cf, #88d8c0);">EL</div>
+                    <div class="post-user-info">
+                        <h3>Emma Lindqvist</h3>
+                        <div class="post-time">6 timmar sedan</div>
+                    </div>
+                </div>
+                <div class="post-content">
+                    Har precis avslutat mitt första maraton! 42.2 km av ren viljestyrka. Tack alla som hejade på mig längs vägen! 🏃‍♀️💪
+                </div>
+                <img src="https://images.unsplash.com/photo-1544717297-fa95b6ee9643?w=600&h=400&fit=crop" alt="Löpning" class="post-image">
+                <div class="post-stats">
+                    <span>47 gilla-markeringar</span>
+                    <span>18 kommentarer</span>
+                </div>
+                <div class="post-interactions">
+                    <button class="interaction-btn" onclick="toggleLike(this)">
+                        👍 Gilla
+                    </button>
+                    <button class="interaction-btn">
+                        💬 Kommentera
+                    </button>
+                    <button class="interaction-btn">
+                        📤 Dela
+                    </button>
+                </div>
+            </article>
+        </main>
+
+        <!-- Right Sidebar -->
+        <aside class="right-sidebar">
+            <!-- Friend Requests -->
+            <div class="widget">
+                <h3>Vänförfrågningar</h3>
+                <div class="friend-request">
+                    <div class="friend-avatar">SN</div>
+                    <div class="friend-info">
+                        <div class="friend-name">Sofia Nilsson</div>
+                        <div class="friend-status">2 gemensamma vänner</div>
+                        <div class="friend-actions">
+                            <button class="friend-btn accept">Bekräfta</button>
+                            <button class="friend-btn decline">Ta bort</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="friend-request">
+                    <div class="friend-avatar" style="background: linear-gradient(45deg, #feca57, #ff9ff3);">JB</div>
+                    <div class="friend-info">
+                        <div class="friend-name">Johan Berg</div>
+                        <div class="friend-status">1 gemensam vän</div>
+                        <div class="friend-actions">
+                            <button class="friend-btn accept">Bekräfta</button>
+                            <button class="friend-btn decline">Ta bort</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Online Friends -->
+            <div class="widget">
+                <h3>Aktiva kontakter</h3>
+                <div class="online-friend">
+                    <div class="friend-avatar" style="background: linear-gradient(45deg, #74b9ff, #0984e3);">LK</div>
+                    <div class="friend-info">
+                        <div class="friend-name">Lisa Karlsson</div>
+                    </div>
+                    <div class="online-indicator"></div>
+                </div>
+                <div class="online-friend">
+                    <div class="friend-avatar" style="background: linear-gradient(45deg, #fd79a8, #e84393);">TA</div>
+                    <div class="friend-info">
+                        <div class="friend-name">Thomas Andersson</div>
+                    </div>
+                    <div class="online-indicator"></div>
+                </div>
+                <div class="online-friend">
+                    <div class="friend-avatar" style="background: linear-gradient(45deg, #55a3ff, #003d82);">KS</div>
+                    <div class="friend-info">
+                        <div class="friend-name">Karin Svensson</div>
+                    </div>
+                    <div class="online-indicator"></div>
+                </div>
+            </div>
+        </aside>
+    </div>
+
+    <!-- Post Modal -->
+    <div class="modal" id="postModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">Skapa inlägg</h2>
+                <button class="close-btn" onclick="closePostModal()">&times;</button>
+            </div>
+            <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 16px;">
+                <div class="user-avatar">DU</div>
+                <div>
+                    <div style="font-weight: 500;">Du</div>
+                    <div style="font-size: 12px; color: #65676b;">🌍 Offentligt</div>
+                </div>
+            </div>
+            <textarea class="modal-textarea" id="postText" placeholder="Vad tänker du på?"></textarea>
+            <div class="modal-actions">
+                <button class="modal-btn cancel" onclick="closePostModal()">Avbryt</button>
+                <button class="modal-btn publish" onclick="publishPost()">Publicera</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Post Modal Functions
+        function openPostModal() {
+            document.getElementById('postModal').style.display = 'block';
+            document.getElementById('postText').focus();
+        }
+
+        function closePostModal() {
+            document.getElementById('postModal').style.display = 'none';
+            document.getElementById('postText').value = '';
+        }
+
+        function publishPost() {
+            const postText = document.getElementById('postText').value.trim();
+            if (!postText) {
+                alert('Skriv något innan du publicerar!');
+                return;
+            }
+
+            // Create new post element
+            const newPost = document.createElement('article');
+            newPost.className = 'post';
+            newPost.innerHTML = `
+                <div class="post-header">
+                    <div class="user-avatar">DU</div>
+                    <div class="post-user-info">
+                        <h3>Du</h3>
+                        <div class="post-time">Nu</div>
+                    </div>
+                </div>
+                <div class="post-content">${postText}</div>
+                <div class="post-stats">
+                    <span>0 gilla-markeringar</span>
+                    <span>0 kommentarer</span>
+                </div>
+                <div class="post-interactions">
+                    <button class="interaction-btn" onclick="toggleLike(this)">
+                        👍 Gilla
+                    </button>
+                    <button class="interaction-btn">
+                        💬 Kommentera
+                    </button>
+                    <button class="interaction-btn">
+                        📤 Dela
+                    </button>
+                </div>
+            `;
+
+            // Add to feed
+            const feed = document.querySelector('.feed');
+            const createPost = document.querySelector('.create-post');
+            feed.insertBefore(newPost, createPost.nextSibling);
+
+            // Close modal
+            closePostModal();
+        }
+
+        // Like functionality
+        function toggleLike(button) {
+            const isLiked = button.classList.contains('liked');
+            const post = button.closest('.post');
+            const statsElement = post.querySelector('.post-stats span');
+            let currentLikes = parseInt(statsElement.textContent.split(' ')[0]);
+
+            if (isLiked) {
+                button.classList.remove('liked');
+                button.innerHTML = '👍 Gilla';
+                currentLikes = Math.max(0, currentLikes - 1);
+            } else {
+                button.classList.add('liked');
+                button.innerHTML = '👍 Gillad';
+                currentLikes += 1;
+            }
+
+            statsElement.textContent = `${currentLikes} gilla-markeringar`;
+        }
+
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            const modal = document.getElementById('postModal');
+            if (event.target === modal) {
+                closePostModal();
+            }
+        }
+
+        // Navigation functionality
+        document.querySelectorAll('.nav-icon').forEach(icon => {
+            icon.addEventListener('click', function() {
+                document.querySelectorAll('.nav-icon').forEach(i => i.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+
+        // Friend request actions
+        document.addEventListener('click', function(e) {
+            if (e.target.classList.contains('accept')) {
+                e.target.closest('.friend-request').style.opacity = '0.5';
+                setTimeout(() => {
+                    e.target.closest('.friend-request').remove();
+                }, 300);
+            }
+            
+            if (e.target.classList.contains('decline')) {
+                e.target.closest('.friend-request').style.opacity = '0.5';
+                setTimeout(() => {
+                    e.target.closest('.friend-request').remove();
+                }, 300);
+            }
+        });
+
+        // Search functionality
+        document.querySelector('.search-input').addEventListener('input', function(e) {
+            const searchTerm = e.target.value.toLowerCase();
+            if (searchTerm.length > 2) {
+                console.log('Söker efter:', searchTerm);
+                // Här kan du implementera sökfunktionalitet
+            }
+        });
+
+        // Auto-resize textarea
+        document.getElementById('postText').addEventListener('input', function() {
+            this.style.height = 'auto';
+            this.style.height = this.scrollHeight + 'px';
+        });
+
+        // Simulate real-time updates
+        setInterval(() => {
+            document.querySelectorAll('.post-time').forEach(timeElement => {
+                const currentText = timeElement.textContent;
+                if (currentText === 'Nu') {
+                    timeElement.textContent = '1 minut sedan';
+                } else if (currentText === '1 minut sedan') {
+                    timeElement.textContent = '2 minuter sedan';
+                }
+            });
+        }, 60000); // Update every minute
+    </script>
+</body>
+</html>
